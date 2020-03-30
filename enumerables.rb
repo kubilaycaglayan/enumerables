@@ -1,3 +1,5 @@
+# rubocop:disable Style/CaseEquality
+
 module Enumerable
   def my_each
     if block_given?
@@ -36,8 +38,8 @@ module Enumerable
     end
   end
 
+  # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
   def my_all?(pattern = false)
-    result = true
     length = self.length
     if block_given?
       length.times do |i|
@@ -55,6 +57,39 @@ module Enumerable
         return false if (self[i] == false) || self[i].nil?
       end
     end
-    result
+    true
   end
+
+  def my_any?(pattern = false)
+    length = self.length
+    if block_given?
+      length.times do |i|
+        block_result = yield(self[i])
+        (return true) if block_result
+      end
+    elsif pattern
+      length.times do |i|
+        return true if pattern === self[i]
+      end
+    else
+      length.times do |i|
+        return true if self[i]
+      end
+    end
+    false
+  end
+
+  # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 end
+
+# rubocop:enable Style/CaseEquality
+def my_test
+  puts "------> my_any".upcase
+  puts %w[ant bear cat].my_any? { |word| word.length >= 3 } #=> true
+  puts %w[ant bear cat].my_any? { |word| word.length >= 4 } #=> true
+  puts %w[ant bear cat].my_any?(/d/)                        #=> false
+  puts [nil, true, 99].my_any?(Integer)                     #=> true
+  puts [nil, true, 99].my_any?                              #=> true
+  puts [].my_any?                                           #=> false
+end
+my_test
