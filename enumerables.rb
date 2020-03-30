@@ -30,17 +30,31 @@ module Enumerable
       length.times do |i|
         arr_result << self[i] if yield(self[i])
       end
-      return arr_result
+      arr_result
     else
       to_enum(:my_select)
     end
   end
 
-  def my_all?
-    
+  def my_all?(pattern = false)
+    result = true
+    length = self.length
+    if block_given?
+      length.times do |i|
+        block_result = yield(self[i])
+        condition_one = block_result == false
+        condition_two = block_result.nil?
+        (return false) if condition_one || condition_two
+      end
+    elsif pattern
+      length.times do |i|
+        return false unless pattern === self[i]
+      end
+    else
+      length.times do |i|
+        return false if (self[i] == false) || self[i].nil?
+      end
+    end
+    result
   end
 end
-
-filtered = (1..6).to_a.my_select
-
-print filtered
