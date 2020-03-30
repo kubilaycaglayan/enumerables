@@ -113,6 +113,18 @@ module Enumerable
     length
   end
   # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+  def my_map
+    length = self.size
+    result = []
+    if block_given?
+      length.times do |i|
+        result << yield(self.to_a[i])
+      end
+      result
+    else
+      to_enum(:my_map)
+    end
+  end
 end
 
 # rubocop:enable Style/CaseEquality
@@ -133,5 +145,10 @@ def my_test
   puts [nil].my_none? #=> true
   puts [nil, false].my_none? #=> true
   puts [nil, false, true].my_none? #=> false
+  puts '-------> my_map?'.upcase
+  print (1..4).my_map { |i| i*i }      #=> [1, 4, 9, 16]
+  puts
+  print (1..4).my_map { "cat"  }   #=> ["cat", "cat", "cat", "cat"]
+  puts
 end
 my_test
