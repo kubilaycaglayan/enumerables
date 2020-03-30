@@ -98,6 +98,20 @@ module Enumerable
     true
   end
 
+  def my_count(arg = false)
+    length = self.length
+    count = 0
+    if block_given?
+      length.times do |i|
+        count += 1 if yield(self[i])
+      end
+    elsif arg
+      length.times do
+        count += 1 if self[i] == arg
+      end
+    end
+    length
+  end
   # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 end
 
