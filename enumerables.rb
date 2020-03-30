@@ -5,21 +5,20 @@ module Enumerable
       length.times do |i|
         yield(self[i])
       end
-      return self
-    else
-      return self
+      self
     end
+    self
   end
+
   def my_each_with_index
     if block_given?
-        length = self.length
-        length.times do |i|
-          yield(self[i], i)
-        end
-        return self
-    else
-        return self
+      length = self.length
+      length.times do |i|
+        yield(self[i], i)
+      end
+      self
     end
+    self
   end
 end
 
@@ -31,8 +30,8 @@ end
 print result
 
 result = numbers.my_each_with_index do |x, i|
-    puts x > 3
-    puts i
+  puts x > 3
+  puts i
 end
 
 print result
