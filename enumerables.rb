@@ -37,7 +37,7 @@ module Enumerable
     end
   end
 
-  # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+  # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Metrics/MethodLength
   def my_all?(pattern = false)
     length = self.length
     if block_given?
@@ -161,49 +161,9 @@ module Enumerable
     accumulation
   end
 end
-# rubocop:disable Lint/ParenthesesAsGroupedExpression, Lint/AmbiguousBlockAssociation
-def my_test
-  puts '------> my_any?'.upcase
-  puts(%w[ant bear cat].my_any? { |word| word.length >= 3 }) #=> true
-  puts(%w[ant bear cat].my_any? { |word| word.length >= 4 }) #=> true
-  puts %w[ant bear cat].my_any?(/d/) #=> false
-  puts [nil, true, 99].my_any?(Integer) #=> true
-  puts [nil, true, 99].my_any? #=> true
-  puts [].my_any? #=> false
-  puts '------> my_none?'.upcase
-  puts(%w[ant bear cat].my_none? { |word| word.length == 5 }) #=> true
-  puts(%w[ant bear cat].my_none? { |word| word.length >= 4 }) #=> false
-  puts %w[ant bear cat].my_none?(/d/) #=> true
-  puts [1, 3.14, 42].my_none?(Float) #=> false
-  puts [].my_none? #=> true
-  puts [nil].my_none? #=> true
-  puts [nil, false].my_none? #=> true
-  puts [nil, false, true].my_none? #=> false
-  puts '-------> my_map?'.upcase
-  print (1..4).my_map { |i| i * i } #=> [1, 4, 9, 16]
-  puts
-  print (1..4).my_map { 'cat' } #=> ["cat", "cat", "cat", "cat"]
-  puts
-  puts '-------> my_inject?'.upcase
-  result = %w[a b cc].my_inject('x') do |memo, n|
-    memo + n
-  end
-  puts result
-  # Sum some numbers
-  puts (5..10).my_inject(:+) #=> 45
-  # Same using a block and inject
-  puts (5..10).my_inject { |sum, n| sum + n } #=> 45
-  # Multiply some numbers
-  puts (5..10).my_inject(1, :*) #=> 151200
-  # Same using a block
-  puts (5..10).my_inject(1) { |product, n| product * n } #=> 151200
-  # find the longest word
-  longest = %w[cat sheep bear].my_inject do |memo, word|
-    memo.length > word.length ? memo : word
-  end
-  puts longest #=> "sheep"
-  puts (1..5).my_inject(:*)
-end
-my_test
 
-# rubocop:enable Style/CaseEquality, Metrics/ModuleLength, Lint/ParenthesesAsGroupedExpression, Lint/AmbiguousBlockAssociation
+def multiply_els(array)
+  array.my_inject(:*)
+end
+
+# rubocop:enable Style/CaseEquality, Metrics/ModuleLength, Metrics/MethodLength
