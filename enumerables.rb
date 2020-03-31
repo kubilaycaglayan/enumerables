@@ -160,6 +160,24 @@ module Enumerable
     end
     accumulation
   end
+
+  def my_map_modified(proc_in = nil)
+    length = size
+    result = []
+    if proc_in || (proc_in && block_given?)
+      length.times do |i|
+        result << proc_in.call(to_a[i])
+      end
+      result
+    elsif block_given?
+      length.times do |i|
+        result << yield(to_a[i])
+      end
+      result
+    else
+      to_enum(:my_map)
+    end
+  end
 end
 
 def multiply_els(array)
