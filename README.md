@@ -37,7 +37,7 @@ To get a local copy up and running follow these steps:
 OR:
 
 - Fork/Clone this project to your local machine
-- Open bubble_sort.rb in your local enviroment and run this code:
+- Open enumerables.rb in your local enviroment and run this code:
 
 ```
 ## Testing 
