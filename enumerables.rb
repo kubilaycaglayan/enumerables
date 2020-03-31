@@ -2,7 +2,7 @@
 module Enumerable
   def my_each
     if block_given?
-      length = self.length
+      length = size
       length.times do |i|
         yield(self[i])
       end
@@ -14,7 +14,7 @@ module Enumerable
 
   def my_each_with_index
     if block_given?
-      length = self.length
+      length = size
       length.times do |i|
         yield(self[i], i)
       end
@@ -27,7 +27,7 @@ module Enumerable
   def my_select
     if block_given?
       arr_result = []
-      length = self.length
+      length = size
       length.times do |i|
         arr_result << self[i] if yield(self[i])
       end
@@ -39,7 +39,7 @@ module Enumerable
 
   # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Metrics/MethodLength
   def my_all?(pattern = false)
-    length = self.length
+    length = size
     if block_given?
       length.times do |i|
         block_result = yield(self[i])
@@ -60,7 +60,7 @@ module Enumerable
   end
 
   def my_any?(pattern = false)
-    length = self.length
+    length = size
     if block_given?
       length.times do |i|
         block_result = yield(self[i])
@@ -79,7 +79,7 @@ module Enumerable
   end
 
   def my_none?(pattern = false)
-    length = self.length
+    length = size
     if block_given?
       length.times do |i|
         block_result = yield(self[i])
@@ -98,34 +98,23 @@ module Enumerable
   end
 
   def my_count(arg = false)
-    length = self.length
+    length = size
     count = 0
     if block_given?
       length.times do |i|
         count += 1 if yield(self[i])
       end
     elsif arg
-      length.times do
+      length.times do |i|
         count += 1 if self[i] == arg
       end
-    end
-    length
-  end
-
-  # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
-  def my_map
-    length = size
-    result = []
-    if block_given?
-      length.times do |i|
-        result << yield(to_a[i])
-      end
-      result
     else
-      to_enum(:my_map)
+      return length
     end
+    count
   end
 
+  # rubocop:enable Metrics/CyclomaticComplexity
   def my_inject(initial = nil, sym = nil)
     calculation = {
       :+ => proc { |x, y| x + y },
@@ -147,7 +136,8 @@ module Enumerable
         end
       end
       accumulation
-    elsif initial.is_a? Symbol
+    elsif (initial.is_a? Symbol) || (Symbol.all_symbols.map(&:to_s).include? initial)
+      initial = initial.to_sym if Symbol.all_symbols.map(&:to_s).include? initial
       accumulation = to_a[0]
       (length - 1).times do |i|
         accumulation = calculation[initial].call(accumulation, to_a[i + 1])
@@ -161,7 +151,7 @@ module Enumerable
     accumulation
   end
 
-  def my_map_modified(proc_in = nil)
+  def my_map(proc_in = nil)
     length = size
     result = []
     if proc_in || (proc_in && block_given?)
@@ -184,4 +174,4 @@ def multiply_els(array)
   array.my_inject(:*)
 end
 
-# rubocop:enable Style/CaseEquality, Metrics/ModuleLength, Metrics/MethodLength
+# rubocop:enable Style/CaseEquality, Metrics/ModuleLength, Metrics/MethodLength, Metrics/PerceivedComplexity
