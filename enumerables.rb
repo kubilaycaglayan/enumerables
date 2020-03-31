@@ -2,8 +2,7 @@
 module Enumerable
   def my_each
     if block_given?
-      length = size
-      length.times do |i|
+      size.times do |i|
         yield(self[i])
       end
       self
@@ -14,8 +13,7 @@ module Enumerable
 
   def my_each_with_index
     if block_given?
-      length = size
-      length.times do |i|
+      size.times do |i|
         yield(self[i], i)
       end
       self
@@ -27,8 +25,7 @@ module Enumerable
   def my_select
     if block_given?
       arr_result = []
-      length = size
-      length.times do |i|
+      size.times do |i|
         arr_result << self[i] if yield(self[i])
       end
       arr_result
@@ -37,22 +34,20 @@ module Enumerable
     end
   end
 
-  # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Metrics/MethodLength
   def my_all?(pattern = false)
-    length = size
     if block_given?
-      length.times do |i|
+      size.times do |i|
         block_result = yield(self[i])
         condition_one = block_result == false
         condition_two = block_result.nil?
         (return false) if condition_one || condition_two
       end
     elsif pattern
-      length.times do |i|
+      size.times do |i|
         return false unless pattern === self[i]
       end
     else
-      length.times do |i|
+      size.times do |i|
         return false if (self[i] == false) || self[i].nil?
       end
     end
@@ -60,18 +55,17 @@ module Enumerable
   end
 
   def my_any?(pattern = false)
-    length = size
     if block_given?
-      length.times do |i|
+      size.times do |i|
         block_result = yield(self[i])
         (return true) if block_result
       end
     elsif pattern
-      length.times do |i|
+      size.times do |i|
         return true if pattern === self[i]
       end
     else
-      length.times do |i|
+      size.times do |i|
         return true if self[i]
       end
     end
@@ -79,18 +73,17 @@ module Enumerable
   end
 
   def my_none?(pattern = false)
-    length = size
     if block_given?
-      length.times do |i|
+      size.times do |i|
         block_result = yield(self[i])
         (return false) if block_result
       end
     elsif pattern
-      length.times do |i|
+      size.times do |i|
         return false if pattern === self[i]
       end
     else
-      length.times do |i|
+      size.times do |i|
         return false if self[i]
       end
     end
@@ -98,18 +91,17 @@ module Enumerable
   end
 
   def my_count(arg = false)
-    length = size
     count = 0
     if block_given?
-      length.times do |i|
+      size.times do |i|
         count += 1 if yield(self[i])
       end
     elsif arg
-      length.times do |i|
+      size.times do |i|
         count += 1 if self[i] == arg
       end
     else
-      return length
+      return size
     end
     count
   end
@@ -122,16 +114,15 @@ module Enumerable
       :/ => proc { |x, y| x / y },
       :* => proc { |x, y| x * y }
     }
-    length = size
     if block_given?
       if initial
         accumulation = initial
-        length.times do |i|
+        size.times do |i|
           accumulation = yield(accumulation, to_a[i])
         end
       else
         accumulation = to_a[0]
-        (length - 1).times do |i|
+        (size - 1).times do |i|
           accumulation = yield(accumulation, to_a[i + 1])
         end
       end
@@ -139,12 +130,12 @@ module Enumerable
     elsif (initial.is_a? Symbol) || (Symbol.all_symbols.map(&:to_s).include? initial)
       initial = initial.to_sym if Symbol.all_symbols.map(&:to_s).include? initial
       accumulation = to_a[0]
-      (length - 1).times do |i|
+      (size - 1).times do |i|
         accumulation = calculation[initial].call(accumulation, to_a[i + 1])
       end
     else
       accumulation = initial
-      length.times do |i|
+      size.times do |i|
         accumulation = calculation[sym].call(accumulation, to_a[i])
       end
     end
@@ -152,15 +143,14 @@ module Enumerable
   end
 
   def my_map(proc_in = nil)
-    length = size
     result = []
     if proc_in || (proc_in && block_given?)
-      length.times do |i|
+      size.times do |i|
         result << proc_in.call(to_a[i])
       end
       result
     elsif block_given?
-      length.times do |i|
+      size.times do |i|
         result << yield(to_a[i])
       end
       result
