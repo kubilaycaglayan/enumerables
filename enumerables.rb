@@ -1,4 +1,4 @@
-# rubocop:disable Style/CaseEquality, Metrics/ModuleLength
+# rubocop:disable Style/CaseEquality, Metrics/ModuleLength, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Metrics/MethodLength
 module Enumerable
   def my_each
     if block_given?
@@ -72,22 +72,8 @@ module Enumerable
     false
   end
 
-  def my_none?(pattern = false)
-    if block_given?
-      size.times do |i|
-        block_result = yield(self[i])
-        (return false) if block_result
-      end
-    elsif pattern
-      size.times do |i|
-        return false if pattern === self[i]
-      end
-    else
-      size.times do |i|
-        return false if self[i]
-      end
-    end
-    true
+  def my_none?(pattern = false, &block)
+    !my_any?(pattern, &block)
   end
 
   def my_count(arg = false)
@@ -106,7 +92,6 @@ module Enumerable
     count
   end
 
-  # rubocop:enable Metrics/CyclomaticComplexity
   def my_inject(initial = nil, sym = nil)
     calculation = {
       :+ => proc { |x, y| x + y },
@@ -160,8 +145,8 @@ module Enumerable
   end
 end
 
+# rubocop:enable Style/CaseEquality, Metrics/ModuleLength, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Metrics/MethodLength
+
 def multiply_els(array)
   array.my_inject(:*)
 end
-
-# rubocop:enable Style/CaseEquality, Metrics/ModuleLength, Metrics/MethodLength, Metrics/PerceivedComplexity
