@@ -1,4 +1,5 @@
 # rubocop:disable Style/CaseEquality, Metrics/ModuleLength, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Metrics/MethodLength
+
 module Enumerable
   def my_each
     if block_given?
