@@ -75,4 +75,30 @@ RSpec.describe Enumerable do
       expect([].my_none?).to be true
     end
   end
+
+  describe '#my_all?' do
+    it 'checks the condition in the given block for every' \
+       'item and returns true if block returns true every time' do
+      expect(words.my_all? { |item| item.length >= 3 }).to be true
+    end
+    it 'If instead a pattern is supplied, the method returns whether pattern === element for all collection member' do
+      expect(words.my_all?(/d/)).to be false
+      expect(mixed.my_all?(Integer)).to be false
+    end
+    it 'returns false when an empty array is given' do
+      expect([].my_all?).to be true
+    end
+  end
+
+  describe '#my_count' do
+    it 'counts the items in an array' do
+      expect(arr.my_count).to be 3
+    end
+    it 'counts the specific item ' do
+      expect(arr.my_count(1)).to eq 1
+    end
+    it 'counts how many time the block condition is fulfilled' do
+      expect(arr.my_count(&:odd?)).to be 2
+    end
+  end
 end
