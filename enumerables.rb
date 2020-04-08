@@ -1,10 +1,6 @@
 # rubocop:disable Style/CaseEquality, Metrics/ModuleLength, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Metrics/MethodLength
 
 module Enumerable
-  def sum(a,b)
-    a + b
-  end
-  
   def my_each
     if block_given?
       size.times do |i|
@@ -155,7 +151,3 @@ end
 def multiply_els(array)
   array.my_inject(:*)
 end
-
-include Enumerable
-
-puts (1..3).my_each 
