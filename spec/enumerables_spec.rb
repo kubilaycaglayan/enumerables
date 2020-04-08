@@ -3,6 +3,8 @@ require './enumerables.rb'
 RSpec.describe Enumerable do
   include Enumerable
   let(:arr) { [1, 2, 3] }
+  let(:words) { %w[ant bear cat] }
+  let(:mixed) { [nil, true, 99] }
 
   describe '#my_each' do
     it 'returns exactly the same as the original function when passed a block' do
@@ -43,6 +45,20 @@ RSpec.describe Enumerable do
 
     it 'should throw an argument error if passed an argument' do
       expect { arr.my_select('whatever') }.to raise_error(ArgumentError)
+    end
+  end
+
+  describe '#my_any' do
+    it 'checks the condition in the given block for every' \
+       'item and returns true if block returns true at least one time' do
+      expect(words.my_any? { |item| item.length >= 3 }).to be true
+    end
+    it 'If instead a pattern is supplied, the method returns whether pattern === element for any collection member' do
+      expect(words.my_any?(/d/)).to be false
+      expect(mixed.my_any?(Integer)).to be true
+    end
+    it 'returns false when an empty array is given' do
+      expect([].my_any?).to be false
     end
   end
 end
