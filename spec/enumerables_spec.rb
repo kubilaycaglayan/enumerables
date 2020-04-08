@@ -48,7 +48,7 @@ RSpec.describe Enumerable do
     end
   end
 
-  describe '#my_any' do
+  describe '#my_any?' do
     it 'checks the condition in the given block for every' \
        'item and returns true if block returns true at least one time' do
       expect(words.my_any? { |item| item.length >= 3 }).to be true
@@ -59,6 +59,20 @@ RSpec.describe Enumerable do
     end
     it 'returns false when an empty array is given' do
       expect([].my_any?).to be false
+    end
+  end
+
+  describe '#my_none' do
+    it 'checks the condition in the given block for every' \
+    'item and returns true if block returns false for all items' do
+      expect(words.my_none? { |item| item.length >= 3 }).to be false
+    end
+    it 'If instead a pattern is supplied, the method returns whether pattern !== element for any collection member' do
+      expect(words.my_none?(/d/)).to be true
+      expect(mixed.my_none?(Integer)).to be false
+    end
+    it 'returns true when an empty array is given' do
+      expect([].my_none?).to be true
     end
   end
 end
