@@ -101,4 +101,24 @@ RSpec.describe Enumerable do
       expect(arr.my_count(&:odd?)).to be 2
     end
   end
+  describe '#my_inject' do
+    it 'accepts a symbol that references a block as an argument' do
+      expect(arr.my_inject(:+)).to eq(6)
+    end
+    it 'accepts a block' do
+      expect(arr.my_inject { |sum, n| sum + n }).to eq(6)
+    end
+
+    it 'accepts an argument as a an initiator value well as symbol as a block reference' do
+      expect((5..10).my_inject(1, :*)).to eq(151_200)
+    end
+
+    it 'accepts an argument as an initiator value well a block' do
+      expect(arr.my_inject(1) { |product, n| product * n }).to eq(6)
+    end
+
+    it 'accepts an argument as an initiator value well a block' do
+      expect(words2.my_inject(&longest)).to eq('dinosaur')
+    end
+  end
 end
