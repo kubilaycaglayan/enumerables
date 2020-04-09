@@ -4,7 +4,18 @@ RSpec.describe Enumerable do
   include Enumerable
   let(:arr) { [1, 2, 3] }
   let(:words) { %w[ant bear cat] }
+  let(:words2) { %w[ant sheep dinosaur] }
   let(:mixed) { [nil, true, 99] }
+  let(:longest) do
+    proc do |memo, word|
+      memo.length > word.length ? memo : word
+    end
+  end
+  let(:identify) do
+    proc do |_item|
+      'proc'
+    end
+  end
 
   describe '#my_each' do
     it 'returns exactly the same as the original function when passed a block' do
@@ -101,6 +112,7 @@ RSpec.describe Enumerable do
       expect(arr.my_count(&:odd?)).to be 2
     end
   end
+
   describe '#my_inject' do
     it 'accepts a symbol that references a block as an argument' do
       expect(arr.my_inject(:+)).to eq(6)
@@ -119,6 +131,21 @@ RSpec.describe Enumerable do
 
     it 'accepts an argument as an initiator value well a block' do
       expect(words2.my_inject(&longest)).to eq('dinosaur')
+    end
+  end
+
+  describe '#my_map' do
+    it 'accepts a symbol that references a block as an argument' do
+      expect(arr.my_map(&:to_s)).to eq(%w[1 2 3])
+    end
+    it 'accepts a block and returns it as array' do
+      expect(arr.my_map { |i| i * i }).to eq([1, 4, 9])
+    end
+    it 'return an item dictated by the block passed to it for every item in the array' do
+      expect(arr.my_map { 'cat' }).to eql(Array.new(3, 'cat'))
+    end
+    it 'if both proc argument and block given, the proc will be used' do
+      expect(arr.my_map(identify) { |_item| 'block' }).to eql(Array.new(3, 'proc'))
     end
   end
 end
